@@ -1,0 +1,9 @@
+.app-header {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    justify-items: center;
+    &__tabs-wrapper {
+        margin: 0 auto;
+    }
+}

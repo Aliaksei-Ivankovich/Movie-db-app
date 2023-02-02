@@ -1,0 +1,63 @@
+@import '../../style/variables.scss';
+
+
+.movie-list {
+    &__wrapper {
+        margin: 0 auto;
+        display: flex;
+        justify-content: center;
+        justify-items: stretch;
+        padding: 2rem 0;
+        width: 100%;
+    }
+    &__grid {
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 2rem;
+    }
+    &__item {
+        display: grid;
+        grid-template-columns: 40% 1fr;
+        box-shadow: (0px 4px 12px rgba(0, 0, 0, 0.15));
+    }
+    &__img {
+        max-width: 100%;
+        object-fit: contain;
+    }
+    &__content {
+        padding: 0.625rem 1.25rem;
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    &__title {
+        font-size: 1.25rem;
+    }
+    &__date {
+        color: $text-grey;
+        font-size: 0.75rem;
+    }
+    &__genres {
+        display: flex;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+    }
+    &__genre-title {
+        padding: 0.25rem;
+        background: $genre-background;
+        border: 1px solid $genre-border;
+        border-radius: 2px;
+        font-size: 0.75rem;
+        color: $text-genre;
+    }
+    &__description {
+        font-size: 0.75rem;
+        line-height: 1.375rem;
+    }
+    &__pagination-wrapper {
+        display: flex;
+        justify-content: center;
+    }
+
+}
