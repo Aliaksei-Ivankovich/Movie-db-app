@@ -3,7 +3,7 @@ import { intlFormat } from 'date-fns';
 
 class MovieServices {
   _apiBase = 'https://api.themoviedb.org/3/';
-  _atiKey = 'api_key=dd48bd4b4c107ceaff888556190e9b26';
+  _atiKey = 'dd48bd4b4c107ceaff888556190e9b26';
 
   getResourse = async (url) => {
 
@@ -14,12 +14,19 @@ class MovieServices {
     return await res.json()
   }
 
+  startGuestSession = async () => {
+    const res = await this.getResourse(
+      `${this._apiBase}authentication/guest_session/new?api_key=${this._atiKey}`
+    )
+    return res.guest_session_id
+  }
+
   getMoviesList = async (query, page) => {
     const movies = await this.getResourse(
-      `${this._apiBase}search/movie?${this._atiKey}&language=en-US&query=${query}&page=${page}&include_adult=false`
+      `${this._apiBase}search/movie?api_key=${this._atiKey}&language=en-US&query=${query}&page=${page}&include_adult=false`
     )
     const genresList = await this.getResourse(
-      `${this._apiBase}genre/movie/list?${this._atiKey}&language=en-US`
+      `${this._apiBase}genre/movie/list?api_key=${this._atiKey}&language=en-US`
     )
     return {
       currentPage: movies.page,

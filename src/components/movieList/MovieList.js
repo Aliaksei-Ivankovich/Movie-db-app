@@ -136,7 +136,7 @@ const View = ({movieList}) => {
         return (
             <Alert type='warning'
                 showIcon 
-                message='Nothing was found for your search...'
+                message='Nothing was found...'
                 style={{'width': '100%'}}/>
                 
         )
