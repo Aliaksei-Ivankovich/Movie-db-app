@@ -1,0 +1,10 @@
+.rated-page {
+    &__wrapper {
+        margin: 0 auto;
+        display: flex;
+        justify-content: center;
+        justify-items: stretch;
+        padding: 2rem 0;
+        width: 100%;
+    }
+}

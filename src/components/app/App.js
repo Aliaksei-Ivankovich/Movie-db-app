@@ -1,22 +1,85 @@
 import { Component } from 'react'
+import { BrowserRouter, Route, Routes } from 'react-router-dom'
 
+import { Provider } from '../genresContext/GenresContext'
+import MovieServices from '../../services/MovieServices'
+import ErrorBoundary from '../errorBoundary/ErrorBoundary'
 import Header from '../header/Header'
-import MovieList from '../movieList/MovieList'
+import { SearchPage, RatedPage } from '../pages/idex'
 
 import './App.scss'
 
-
 class App extends Component {
+  state = {
+    sessionId: '',
+    genresList: {},
+  }
+
+  movieServise = new MovieServices()
+
+  componentDidMount() {
+    this.onStartSession()
+    this.movieServise.getGenresList()
+		.then(this.onGenresListLoaded)
+  }
+
+  onStartSession = () => {
+    const localSession = localStorage.getItem('gusetSession')
+
+    if (localSession) {
+      const gusetSession = JSON.parse(localSession)
+	  const {sessionId, expiresTime} = gusetSession
+
+	  if (new Date(expiresTime) > new Date()) {
+		this.setState({ sessionId })
+	  } else {
+		this.getNewSessionID()
+	  }
+    } else {
+		this.getNewSessionID()
+    }
+  }
+
+  getNewSessionID = () => {
+	this.movieServise
+	.startGuestSession()
+	.then(this.onSessionLoaded)
+  }
+
+  onSessionLoaded = (gusetSession) => {
+    this.setState({ 
+		sessionId: gusetSession.sessionId 
+	})
+    localStorage.setItem('gusetSession', JSON.stringify(gusetSession))
+  }
+
+  onGenresListLoaded = (genresList) => {
+	this.setState({
+      genresList,
+    })
+  }
 
   render() {
- 
+    const { genresList, sessionId } = this.state
+
     return (
       <div className="App">
-        <Header/>
-        <MovieList/>
+			<Provider value={genresList}>
+				<BrowserRouter>
+				<Header />
+				<ErrorBoundary>
+					<Routes>
+						<Route path="/" 
+							element={<SearchPage sessionId={sessionId}/>} />
+						<Route path="/rated" 
+							element={<RatedPage sessionId={sessionId}/>} />
+					</Routes>
+				</ErrorBoundary>
+				</BrowserRouter>
+			</Provider>
       </div>
     )
-}
+  }
 }
 
 export default App

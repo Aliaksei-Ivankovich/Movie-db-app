@@ -1,0 +1,30 @@
+@import '../../style/variables.scss';
+
+.movie-raiting {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 0.75rem;
+    border-radius: 50%;
+    min-width: 2rem;
+    min-height: 2rem;
+    border: 2px solid grey;
+    text-align: center;
+    &__text {
+        padding: 0;
+        margin: 0;
+        line-height: 0;
+    }
+    &__vote-0-3{
+        border-color: $vote-0-3
+    }
+    &__vote-3-5{
+        border-color: $vote-3-5;
+    }
+    &__vote-5-7{
+        border-color: $vote-5-7;
+    }
+    &__vote-7{
+        border-color: $vote-7;
+    }
+}

@@ -1,9 +1,37 @@
+@import '../../style/variables.scss';
+
+
 .app-header {
     display: flex;
-    flex-direction: column;
     justify-content: center;
-    justify-items: center;
+    padding-bottom: 1rem;
     &__tabs-wrapper {
+        border-bottom: 1px solid $link-border;
+        display: flex;
+        gap: 1rem;
+        justify-content: center;
+        justify-items: center;
         margin: 0 auto;
     }
+    &__tab {
+        padding: 0.5rem;   
+    }
+    &__link {
+        color: $text-link;
+    }
+    &__link-active {
+        position: relative;
+        color: $link-active;
+        &::before {
+            content: '';
+            position: absolute;
+            top: 27px;
+            left: -8px;
+            width: 4.5rem;
+            height: 2px;
+            background-color: $link-active;
+
+        }
+    }
+         
 }

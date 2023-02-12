@@ -1,9 +1,7 @@
-import { Spin } from 'antd';
+import { Spin } from 'antd'
 
 const Spiner = () => {
-    return (
-        <Spin size="large"/>
-    )
+  return <Spin size="large" />
 }
 
-export default Spiner;
+export default Spiner

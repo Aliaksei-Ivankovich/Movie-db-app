@@ -1,37 +1,30 @@
-import { Component } from "react";
-import { Tabs } from 'antd';
+import { Component } from 'react'
+import { NavLink } from "react-router-dom";
 
-import './header.scss';
+import './header.scss'
 
 
 class Header extends Component {
-
-  onTabChange = (key) => {
-      console.log(key);
-  }
-
-  items = [
-      {
-        key: '1',
-        label: `Search`,
-      },
-      {
-        key: '2',
-        label: `Rated`,
-      },
-  ]
+ 
 
   render() {
     return (
-        <header className="app-header">
-          <div className="app-header__tabs-wrapper">
-            <Tabs defaultActiveKey="1" 
-                  items={this.items} 
-                  onChange={this.onTabChange} />
-          </div>
-        </header>
+      <header className='app-header'>
+        <nav className='app-header__tabs-wrapper'>
+          <li className='app-header__tab'>
+            <NavLink to='/' className={({isActive}) => (isActive ? 'app-header__link-active' : 'app-header__link')}>
+              Search
+            </NavLink>
+          </li>
+          <li className='app-header__tab'>
+            <NavLink to='/rated' className={({isActive}) => (isActive ? 'app-header__link-active' : 'app-header__link')}>
+              Rated
+            </NavLink>
+          </li>
+        </nav>
+      </header>
     )
   }
 }
 
-export default Header;
+export default Header
