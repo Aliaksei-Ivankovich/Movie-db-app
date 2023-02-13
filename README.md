@@ -1,3 +1,3 @@
 Movie DB App
 
-https://movie-db-20vnl4go1-aliaksei-ivankovich.vercel.app/
+https://movie-db-qz19xy4pg-aliaksei-ivankovich.vercel.app/
