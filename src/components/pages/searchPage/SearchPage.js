@@ -3,11 +3,10 @@ import { Input, Pagination } from 'antd'
 import { debounce } from 'lodash'
 
 import { genresContext } from '../../genresContext/GenresContext'
-import MovieServices from '../../../services/MovieServices'
+import { getMoviesList } from '../../../services/MovieServices'
 import MovieList from '../../moviesList/MoviesList'
 import ErrorMessage from '../../errorMessage/ErrorMessage'
 import Spiner from '../../spiner/Spiner'
-import SkeletonList from '../../skeletonList/SkeletonList'
 
 import './searchPage.scss'
 
@@ -20,25 +19,32 @@ class SearchPage extends Component {
     startPage: 1,
     loading: false,
     error: false,
-    inputValue: '',
+    errMessage: '',
+    inputValue: 'return',
   }
 
   static contextType = genresContext
-  movieServise = new MovieServices()
+
+  componentDidMount() {
+    const { inputValue, startPage } = this.state
+
+    this.onListLoading()
+    this.onListUpdateWithDebounce(inputValue, startPage)
+  }
 
   componentDidUpdate(prevProps, prevState) {
     const { inputValue, startPage, selectedPage } = this.state
 
     if (prevState.selectedPage !== selectedPage) {
-      this.onListLoading()
-      this.onListUpdateWithDebounce(inputValue, selectedPage)
+        this.onListLoading()
+        this.onListUpdateWithDebounce(inputValue, selectedPage)
     }
 
     if (prevState.inputValue !== inputValue) {
-      this.onListLoading()
-      this.onListUpdateWithDebounce(inputValue, startPage)
+        this.onListLoading()
+        this.onListUpdateWithDebounce(inputValue, startPage)
     }
-  }
+}
 
   onListUpdateWithDebounce = debounce(
     (term, page) => {
@@ -52,8 +58,7 @@ class SearchPage extends Component {
     if (!term) {
       this.onEmptyInput()
     } else {
-      this.movieServise
-        .getMoviesList(term, page)
+        getMoviesList(term, page)
         .then(this.onListLoaded)
         .catch(this.onError)
     }
@@ -76,10 +81,11 @@ class SearchPage extends Component {
     })
   }
 
-  onError = () => {
+  onError = (e) => {
     this.setState({
       loading: false,
       error: true,
+      errMessage: e.message
     })
   }
 
@@ -106,18 +112,15 @@ class SearchPage extends Component {
   }
 
   render() {
-    const { movieList, loading, error, inputValue, totalResults, currentPage } =
+    const { movieList, loading, error, inputValue, totalResults, currentPage, errMessage } =
       this.state
     const { sessionId } = this.props
     const { genres } = this.context
 
-    const skeleton = loading || error || inputValue ? null : <SkeletonList count={6} />
-    const spiner = loading ? <Spiner /> : null
-    const errorMessage = error ? <ErrorMessage /> : null
-    const content =
-      !(loading || error) && inputValue ? (
-        <MovieList movieList={movieList} genres={genres} sessionId={sessionId}/>
-      ) : null
+    const spiner = loading && <Spiner />
+    const errorMessage = error && <ErrorMessage  message={errMessage}/> 
+    const content = !(loading || error) && <MovieList movieList={movieList} genres={genres} sessionId={sessionId}/>
+      
 
     return (
       <>
@@ -127,7 +130,6 @@ class SearchPage extends Component {
           onChange={this.onInputValueChange}
         />
         <div className="search-page__wrapper">
-          {skeleton}
           {spiner}
           {content}
           {errorMessage}
@@ -139,8 +141,7 @@ class SearchPage extends Component {
             showSizeChanger={false}
             defaultPageSize={20}
             hideOnSinglePage
-            onChange={this.onPageSelect}
-          />
+            onChange={this.onPageSelect}/>
         </div>
       </>
     )

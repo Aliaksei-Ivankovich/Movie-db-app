@@ -2,7 +2,7 @@ import { Component } from 'react'
 import { Pagination } from 'antd'
 
 import { genresContext } from '../../genresContext/GenresContext'
-import MovieServices from '../../../services/MovieServices'
+import { getRatedMoviesList } from '../../../services/MovieServices'
 import MovieList from '../../moviesList/MoviesList'
 import Spiner from '../../spiner/Spiner'
 import ErrorMessage from '../../errorMessage/ErrorMessage'
@@ -20,24 +20,31 @@ class RatedPage extends Component {
             selectedPage: null,
             startPage: 1,
             loading: false,
-            error: false
+            error: false,
+            errMessage: ''
         }
     }
 
     static contextType = genresContext
-    movieServise = new MovieServices()
 
     componentDidMount() {
         const { startPage } = this.state
-       
-        this.onListLoading()
-        this.onListUpdate(startPage)
+        const { sessionId } = this.props
+
+        if(sessionId) {
+            this.onListLoading()
+            this.onListUpdate(startPage)
+        }
     }
 
-    
     componentDidUpdate(prevProps, prevState) {
-        const { selectedPage } = this.state
+        const { selectedPage, startPage } = this.state
+        const { sessionId } = this.props
 
+        if (prevProps.sessionId !== sessionId) {
+            this.onListLoading()
+            this.onListUpdate(startPage)
+        }
         if (prevState.selectedPage !== selectedPage) {
             this.onListLoading()
             this.onListUpdate(selectedPage)
@@ -47,7 +54,7 @@ class RatedPage extends Component {
     onListUpdate = (page) => {
         const { sessionId } = this.props
 
-        this.movieServise.getRatedMoviesList(sessionId, page)
+        getRatedMoviesList(sessionId, page)
         .then(this.onListLoaded)
         .catch(this.onError)
     }
@@ -69,10 +76,11 @@ class RatedPage extends Component {
         })
     }
     
-    onError = () => {
+    onError = (e) => {
         this.setState({
           loading: false,
           error: true,
+          errMessage: e.message
         })
     }
 
@@ -83,13 +91,13 @@ class RatedPage extends Component {
     }
 
     render() {
-        const { movieList, loading, error, currentPage, totalResults} = this.state
+        const { movieList, loading, error, currentPage, totalResults, errMessage} = this.state
         const { sessionId } = this.props
         const { genres } = this.context
 
-        const spiner = loading ? <Spiner /> : null
-        const errorMessage = error ? <ErrorMessage /> : null
-        const content = !(loading || error) ? <MovieList movieList={movieList} genres={genres} sessionId={sessionId}/> : null
+        const spiner = loading && <Spiner /> 
+        const errorMessage = error && <ErrorMessage message={errMessage}/> 
+        const content = !(loading || error) && <MovieList movieList={movieList} genres={genres} sessionId={sessionId}/> 
 
         return (
             <>

@@ -1,7 +1,7 @@
 import { Alert, Rate  } from 'antd';
 import { Component } from 'react';
 
-import MovieServices from '../../services/MovieServices'
+import { setMovieRaiting } from '../../services/MovieServices'
 import MovieRating from '../movieRating/MovieRating';
 
 import './movieList.scss';
@@ -9,24 +9,22 @@ import './movieList.scss';
 
 class MovieList extends Component {
   
-    movieServise = new MovieServices()
-
     onMovieRate = (vote, movieId) => {
         const { sessionId } = this.props
 
-        this.movieServise.setMovieRaiting(vote, movieId, sessionId)
+        setMovieRaiting(vote, movieId, sessionId)
     }
 
     render() {
         const {movieList, genres} = this.props
 
-        const content = movieList && movieList.length !== 0 ? <View movieList={movieList} 
+        const content = movieList && movieList.length  && <View movieList={movieList} 
                                                                     genres={genres} 
-                                                                    onMovieRate={this.onMovieRate}/> : null
-        const noSearchRes = movieList.length === 0 ? <Alert type='info'
+                                                                    onMovieRate={this.onMovieRate}/>
+        const noSearchRes = !movieList.length && <Alert type='info'
                                                             showIcon 
                                                             message='Nothing was found...'
-                                                            style={{'width': '100%'}}/> : null
+                                                            style={{'width': '100%'}}/> 
                                                         
         return (
             <>
